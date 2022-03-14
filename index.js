@@ -54,7 +54,7 @@ function init() {
 }
 
 function viewDepartments() {
-    const sql = `SELECT * FROM departments`;
+    const sql = `SELECT * FROM department`;
 
     db.query(sql, (err, results) => {
         console.table(results);
