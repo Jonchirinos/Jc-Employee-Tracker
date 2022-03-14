@@ -37,6 +37,8 @@ function init() {
                 viewEmployees();
             } else if (answers.questions === "view_dep") {
                 viewDepartments();
+            } else if (answers.questions === "add_department") {
+                createDepartment();
             } else if (answers.questions === "add_employees") {
                 createEmployee();
             } else if (answers.questions === "view_role") {
@@ -44,9 +46,9 @@ function init() {
             } else if (answers.questions === "view_role") {
                 updateRole();
             } else if (answers.questions === "change_role") {
-                createDepartment();
+                updateRole();
             } else if (answers.questions === "quit") {
-                connection.end();
+                process.exit(0);
             }
         });
 }
@@ -54,8 +56,9 @@ function init() {
 function viewDepartments() {
     const sql = `SELECT * FROM departments`;
 
-    db.query(sql, (err, rows) => {
-        console.table(rows);
+    db.query(sql, (err, results) => {
+        console.table(results);
+        init();
     });
 }
 
@@ -67,7 +70,7 @@ function viewEmployees() {
 }
 
 function viewRoles() {
-    db.query("SELECT * FROM role", function (results, err) {
+    db.query("SELECT * FROM role", function (err, results) {
         console.table(results);
     });
 }
@@ -87,8 +90,8 @@ function createEmployee() {
             },
         ])
         .then((answers) => {
-            db.query("SELECT * FROM role", function (results, err) {
-                console.log(results), console.log(err);
+            db.query("SELECT * FROM role", function (err, results) {
+                console.log("results", results);
                 const roles = results.map(({ id, title }) => ({
                     name: title,
                     value: id,
@@ -124,7 +127,46 @@ function createEmployee() {
         });
 }
 
-function updateRole() {}
+function updateRole() {
+    db.query("SELECT * FROM employee", function (err, results) {
+        console.log("results", results);
+        const employees = results.map(({ id, first_name, last_name }) => ({
+            name: `${first_name} ${last_name}`,
+            value: id,
+        }));
+
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "employee",
+                    message: "What employee do you want to update?",
+                    choices: employees,
+                },
+            ])
+            .then((employee) => {
+                console.log("employee", employee);
+                db.query("SELECT * FROM role", function (err, results) {
+                    const roles = results.map(({ id, title }) => ({
+                        name: title,
+                        value: id,
+                    }));
+                    inquirer
+                        .prompt({
+                            type: "list",
+                            name: "role",
+                            message: "What is the employee's new role?",
+                            choices: roles,
+                        })
+                        .then((answers) => {
+                            console.log("answers", answers);
+                            db.query("UPDATE employee SET role_id = ? WHERE id = ?", [answers.role, employee.employee]);
+                            init();
+                        });
+                });
+            });
+    });
+}
 
 function createDepartment() {
     inquirer
