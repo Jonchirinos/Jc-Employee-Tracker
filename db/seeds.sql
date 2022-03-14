@@ -13,7 +13,7 @@ VALUES ("Senior Developer", 150000, 1),
         ("Marketing Associate", 70000, 3);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES  ("Jon", "Chirinos", 1, 1),
+VALUES  ("Jon", "Chirinos", 1, NULL),
         ("Kanye", "West", 2, NULL),
         ("Wayne", "Brady", 3, 2),
         ("Scott", "Brunswick", 4, 3);

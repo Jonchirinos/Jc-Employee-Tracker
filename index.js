@@ -3,15 +3,14 @@ const inquirer = require("inquirer");
 
 require("dotenv").config();
 
-const db = mysql.createConnection(
-    {
-        host: "localhost",
-        user: "root",
-        password: "Illinois14",
-        database: "employee_db",
-    },
-    console.log("you are connected")
-);
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "Illinois14",
+    database: "employee_db",
+});
+
+db.connect();
 
 function init() {
     // runs inquirer npm
@@ -23,17 +22,21 @@ function init() {
                 type: "list",
                 message: "What would you like to do?",
                 choices: [
-                    { name: "view all employees", value: "view-emp" },
-                    { name: "view all departments", Value: "view-dep" },
-                    { name: "view all roles", value: "view-role" },
-                    { name: "quit", value: "quit" },
+                    { name: "View all employees", value: "view_emp" },
+                    { name: "View all departments", Value: "view_dep" },
+                    { name: "View all roles", value: "view_role" },
+                    { name: "Add an Employee", value: "add_employees" },
+                    { name: "Quit", value: "quit" },
                 ],
             },
         ])
         .then((answers) => {
-            if (answers.questions === "view-emp") {
-            } else if (answers.questions === "view-dep") {
+            if (answers.questions === "view_emp") {
+                viewEmployees();
+            } else if (answers.questions === "view_dep") {
                 viewDepartments();
+            } else if (answers.questions === "add_employees") {
+                createEmployee();
             }
         });
 }
@@ -43,6 +46,13 @@ function viewDepartments() {
 
     db.query(sql, (err, rows) => {
         console.table(rows);
+    });
+}
+
+function viewEmployees() {
+    db.query("SELECT * FROM employee", function (err, results) {
+        console.table(results);
+        init();
     });
 }
 
@@ -72,6 +82,7 @@ function createEmployee() {
                     name: title,
                     value: id,
                 }));
+                console.log(roles);
                 inquirer
                     .prompt({
                         type: "list",
@@ -101,3 +112,7 @@ function createEmployee() {
             });
         });
 }
+
+//
+
+init();
