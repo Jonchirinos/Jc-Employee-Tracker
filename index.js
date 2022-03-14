@@ -23,7 +23,7 @@ function init() {
                 message: "What would you like to do?",
                 choices: [
                     { name: "View all Employees", value: "view_emp" },
-                    { name: "View all Departments", Value: "view_dep" },
+                    { name: "View all Departments", value: "view_dep" },
                     { name: "View all Roles", value: "view_role" },
                     { name: "Change Employee Role", value: "change_role" },
                     { name: "Add an Employee", value: "add_employees" },
@@ -54,10 +54,10 @@ function init() {
 }
 
 function viewDepartments() {
-    const sql = `SELECT * FROM department`;
-
-    db.query(sql, (err, results) => {
-        console.table(results);
+    const sql = "SELECT * FROM department";
+    db.query(sql, (err, rows) => {
+        console.table(rows);
+        console.log(err);
         init();
     });
 }
