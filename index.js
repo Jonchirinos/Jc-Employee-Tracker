@@ -26,6 +26,7 @@ function init() {
                     { name: "View all Departments", Value: "view_dep" },
                     { name: "View all Roles", value: "view_role" },
                     { name: "Add an Employee", value: "add_employees" },
+                    { name: "Add a Department", value: "add_department" },
                     { name: "Quit", value: "quit" },
                 ],
             },
@@ -39,6 +40,8 @@ function init() {
                 createEmployee();
             } else if (answers.questions === "view_role") {
                 viewRoles();
+            } else if (answers.questions === "add_department") {
+                createDepartment();
             } else if (answers.questions === "quit") {
                 connection.end();
             }
@@ -61,7 +64,7 @@ function viewEmployees() {
 }
 
 function viewRoles() {
-    db.query("SELECT * FROM roles", function (err, results) {
+    db.query("SELECT * FROM role", function (results, err) {
         console.table(results);
     });
 }
@@ -81,7 +84,8 @@ function createEmployee() {
             },
         ])
         .then((answers) => {
-            db.query("SELECT * FROM roles", function (results, err) {
+            db.query("SELECT * FROM role", function (results, err) {
+                console.log(results), console.log(err);
                 const roles = results.map(({ id, title }) => ({
                     name: title,
                     value: id,
@@ -117,21 +121,25 @@ function createEmployee() {
         });
 }
 
-// function createDepartment() {
-//     inquirer
-//     .prompt([
-//         {
-//             name: "addDepartment",
-//             type: "input",
-//             message: "Would you like to add a new Department?",
-//         })
-//         .then(function (answer) {
-//             db.query(`INSERT INTO department Set ?` {
-//                 name: answer.addDepartment,
-//             })
-//         })
-// }
-
-//
+function createDepartment() {
+    inquirer
+        .prompt({
+            name: "addDepartment",
+            type: "input",
+            message: "Would you like to add a new Department?",
+        })
+        .then(function (answer) {
+            db.query(
+                `INSERT INTO department Set ?`,
+                {
+                    name: answer.addDepartment,
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    init();
+                }
+            );
+        });
+}
 
 init();
