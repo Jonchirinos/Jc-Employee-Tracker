@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-
+const table = require("console.table");
 require("dotenv").config();
 
 const db = mysql.createConnection({
@@ -22,9 +22,9 @@ function init() {
                 type: "list",
                 message: "What would you like to do?",
                 choices: [
-                    { name: "View all employees", value: "view_emp" },
-                    { name: "View all departments", Value: "view_dep" },
-                    { name: "View all roles", value: "view_role" },
+                    { name: "View all Employees", value: "view_emp" },
+                    { name: "View all Departments", Value: "view_dep" },
+                    { name: "View all Roles", value: "view_role" },
                     { name: "Add an Employee", value: "add_employees" },
                     { name: "Quit", value: "quit" },
                 ],
@@ -37,6 +37,10 @@ function init() {
                 viewDepartments();
             } else if (answers.questions === "add_employees") {
                 createEmployee();
+            } else if (answers.questions === "view_role") {
+                viewRoles();
+            } else if (answers.questions === "quit") {
+                connection.end();
             }
         });
 }
@@ -112,6 +116,21 @@ function createEmployee() {
             });
         });
 }
+
+// function createDepartment() {
+//     inquirer
+//     .prompt([
+//         {
+//             name: "addDepartment",
+//             type: "input",
+//             message: "Would you like to add a new Department?",
+//         })
+//         .then(function (answer) {
+//             db.query(`INSERT INTO department Set ?` {
+//                 name: answer.addDepartment,
+//             })
+//         })
+// }
 
 //
 
