@@ -25,6 +25,7 @@ function init() {
                     { name: "View all Employees", value: "view_emp" },
                     { name: "View all Departments", Value: "view_dep" },
                     { name: "View all Roles", value: "view_role" },
+                    { name: "Change Employee Role", value: "change_role" },
                     { name: "Add an Employee", value: "add_employees" },
                     { name: "Add a Department", value: "add_department" },
                     { name: "Quit", value: "quit" },
@@ -40,7 +41,9 @@ function init() {
                 createEmployee();
             } else if (answers.questions === "view_role") {
                 viewRoles();
-            } else if (answers.questions === "add_department") {
+            } else if (answers.questions === "view_role") {
+                updateRole();
+            } else if (answers.questions === "change_role") {
                 createDepartment();
             } else if (answers.questions === "quit") {
                 connection.end();
@@ -120,6 +123,8 @@ function createEmployee() {
             });
         });
 }
+
+function updateRole() {}
 
 function createDepartment() {
     inquirer
