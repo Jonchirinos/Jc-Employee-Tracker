@@ -81,7 +81,7 @@ function createEmployee() {
             },
         ])
         .then((answers) => {
-            db.query("SELECT * FROM roles", function (err, results) {
+            db.query("SELECT * FROM roles", function (results, err) {
                 const roles = results.map(({ id, title }) => ({
                     name: title,
                     value: id,
