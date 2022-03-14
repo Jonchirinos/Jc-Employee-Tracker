@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const table = require("console.table");
+const cTable = require("console.table");
 require("dotenv").config();
 
 const db = mysql.createConnection({
@@ -25,9 +25,13 @@ function init() {
                     { name: "View all Employees", value: "view_emp" },
                     { name: "View all Departments", value: "view_dep" },
                     { name: "View all Roles", value: "view_role" },
-                    { name: "Change Employee Role", value: "change_role" },
                     { name: "Add an Employee", value: "add_employees" },
                     { name: "Add a Department", value: "add_department" },
+                    { name: "Add a Role", value: "add_role" },
+                    { name: "Change Employee Role", value: "change_role" },
+                    { name: "Delete Employee", value: "delete_emp" },
+                    { name: "Delete Department", value: "delete_dep" },
+                    { name: "Delete Role", value: "delete_role" },
                     { name: "Quit", value: "quit" },
                 ],
             },
@@ -37,16 +41,22 @@ function init() {
                 viewEmployees();
             } else if (answers.questions === "view_dep") {
                 viewDepartments();
-            } else if (answers.questions === "add_department") {
-                createDepartment();
-            } else if (answers.questions === "add_employees") {
-                createEmployee();
             } else if (answers.questions === "view_role") {
                 viewRoles();
-            } else if (answers.questions === "view_role") {
-                updateRole();
+            } else if (answers.questions === "add_department") {
+                addDepartment();
+            } else if (answers.questions === "add_employees") {
+                addEmployee();
+            } else if (answers.questions === "add_role") {
+                addRole();
             } else if (answers.questions === "change_role") {
-                updateRole();
+                changeRole();
+            } else if (answers.questions === "delete_emp") {
+                changeRole();
+            } else if (answers.questions === "delete_dep") {
+                changeRole();
+            } else if (answers.questions === "delete_role") {
+                changeRole();
             } else if (answers.questions === "quit") {
                 process.exit(0);
             }
@@ -75,7 +85,7 @@ function viewRoles() {
     });
 }
 
-function createEmployee() {
+function addEmployee() {
     inquirer
         .prompt([
             {
@@ -127,7 +137,9 @@ function createEmployee() {
         });
 }
 
-function updateRole() {
+function addRole() {}
+
+function changeRole() {
     db.query("SELECT * FROM employee", function (err, results) {
         console.log("results", results);
         const employees = results.map(({ id, first_name, last_name }) => ({
@@ -168,24 +180,27 @@ function updateRole() {
     });
 }
 
-function createDepartment() {
+function addDepartment() {
     inquirer
         .prompt({
             name: "addDepartment",
             type: "input",
-            message: "Would you like to add a new Department?",
+            message: "What is the name of the new Department?",
         })
-        .then(function (answer) {
+        .then((answer) => {
             db.query(
-                `INSERT INTO department Set ?`,
+                `INSERT INTO department (name) VALUES = (?)`,
                 {
                     name: answer.addDepartment,
                 },
                 function (err, res) {
                     if (err) throw err;
-                    init();
                 }
             );
+            db.query("SELECT * FROM department", (err, res) => {
+                console.table(res);
+                init();
+            });
         });
 }
 
