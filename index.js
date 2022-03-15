@@ -224,15 +224,9 @@ function addDepartment() {
             message: "What is the name of the new Department?",
         })
         .then((answer) => {
-            db.query(
-                "INSERT INTO department (name) VALUES (?)",
-                [
-                    name: answer.addDepartment,
-                ],
-                function (err, row) {
-                    if (err) throw err;
-                }
-            );
+            db.query("INSERT INTO department (name) VALUES (?)", [answer.addDepartment], function (err, row) {
+                if (err) throw err;
+            });
             db.query("SELECT * FROM department", (err, res) => {
                 console.table(res);
                 init();
