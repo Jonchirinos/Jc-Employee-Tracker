@@ -264,10 +264,9 @@ function deleteEmployee() {
 }
 
 function deleteDepartment() {
-    db.query("SELECT * FROM employee", function (err, results) {
-        console.log("results", results);
-        const employees = results.map(({ id, first_name, last_name }) => ({
-            name: `${first_name} ${last_name}`,
+    db.query("SELECT * FROM department", function (err, results) {
+        const departments = results.map(({ id, name }) => ({
+            name: name,
             value: id,
         }));
         inquirer
@@ -275,17 +274,17 @@ function deleteDepartment() {
                 {
                     type: "list",
                     name: "id",
-                    message: "What Employee do you want to Delete?",
-                    choices: employees,
+                    message: "What Department do you want to terminate?",
+                    choices: departments,
                 },
             ])
-            .then((employee) => {
-                console.log("employee", employee);
-                db.query("DELETE FROM employee WHERE id = ?", employee.id, function (err, results) {
+            .then((department) => {
+                console.log("department", department);
+                db.query("DELETE FROM department WHERE id = ?", department.id, function (err, results) {
                     if (err) throw err;
-                    console.log("Employee has been terminated");
+                    console.log("Department has been terminated");
                 });
-                db.query("SELECT * FROM employee", (err, res) => {
+                db.query("SELECT * FROM department", (err, res) => {
                     init();
                 });
             });
