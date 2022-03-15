@@ -112,7 +112,6 @@ function addEmployee() {
                         type: "confirm",
                         name: "manager",
                         message: "Is the Employee a Manager?",
-                        choices: "confirm",
                     },
                     {
                         type: "list",
@@ -122,7 +121,8 @@ function addEmployee() {
                     },
                 ];
                 inquirer.prompt(managerInfo).then((role) => {
-                    if (managerInfo.manager === true) {
+                    console.log(managerInfo.manager);
+                    if (managerInfo.manager === "Yes") {
                         inquirer.prompt({
                             type: "list",
                             name: "id",
