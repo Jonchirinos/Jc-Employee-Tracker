@@ -219,8 +219,8 @@ function changeRole() {
 function addDepartment() {
     inquirer
         .prompt({
-            name: "addDepartment",
             type: "input",
+            name: "addDepartment",
             message: "What is the name of the new Department?",
         })
         .then((answer) => {
@@ -293,10 +293,10 @@ function deleteDepartment() {
 }
 
 function deleteRole() {
-    db.query("SELECT * FROM employee", function (err, results) {
+    db.query("SELECT * FROM role", function (err, results) {
         console.log("results", results);
-        const employees = results.map(({ id, first_name, last_name }) => ({
-            name: `${first_name} ${last_name}`,
+        const roles = results.map(({ id, title }) => ({
+            name: title,
             value: id,
         }));
         inquirer
@@ -304,17 +304,17 @@ function deleteRole() {
                 {
                     type: "list",
                     name: "id",
-                    message: "What Employee do you want to Delete?",
-                    choices: employees,
+                    message: "What Role do you want to terminate?",
+                    choices: roles,
                 },
             ])
-            .then((employee) => {
-                console.log("employee", employee);
-                db.query("DELETE FROM employee WHERE id = ?", employee.id, function (err, results) {
+            .then((role) => {
+                console.log("role", role);
+                db.query("DELETE FROM role WHERE id = ?", role.id, function (err, results) {
                     if (err) throw err;
-                    console.log("Employee has been terminated");
+                    console.log("Role has been terminated");
                 });
-                db.query("SELECT * FROM employee", (err, res) => {
+                db.query("SELECT * FROM role", (err, results) => {
                     init();
                 });
             });
