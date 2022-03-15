@@ -82,6 +82,7 @@ function viewEmployees() {
 function viewRoles() {
     db.query("SELECT * FROM role", function (err, results) {
         console.table(results);
+        init();
     });
 }
 
