@@ -137,7 +137,41 @@ function addEmployee() {
         });
 }
 
-function addRole() {}
+function addRole() {
+    const questions = [{
+        type: "input",
+        name: "newRole",
+        message: "Enter New Role"
+    },
+    {
+        type: "number",
+        name: "roleSalary",
+        message: "What is the salary for the newly created role?",
+    },
+];
+inquirer.prompt(questions).then((answers) => {
+    db.query("SELECT * FROM department", function (err, res) {
+        const departments = res.map(({id, name}) =>({
+            name: name,
+            value: id,
+        }));
+        inquirer.prompt({
+            type: "list",
+            name: "id",
+            message: "Assign Role to designated Department Please",
+            choices: departments,
+        }).then((department) =>{
+            db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answers.newRole, answers.roleSalary, department.id], function (err, row) {
+                if (err) throw err;
+        });
+        db.query("SELECT * FROM role", (err, res) => {
+            init();
+        });
+    });
+        if (err) throw err;
+    });
+});
+}
 
 function changeRole() {
     db.query("SELECT * FROM employee", function (err, results) {
@@ -146,7 +180,6 @@ function changeRole() {
             name: `${first_name} ${last_name}`,
             value: id,
         }));
-
         inquirer
             .prompt([
                 {
@@ -177,8 +210,10 @@ function changeRole() {
                         });
                 });
             });
-    });
-}
+    )};
+};
+    
+    
 
 function addDepartment() {
     inquirer
