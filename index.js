@@ -52,11 +52,11 @@ function init() {
             } else if (answers.questions === "change_role") {
                 changeRole();
             } else if (answers.questions === "delete_emp") {
-                changeRole();
+                deleteEmployee();
             } else if (answers.questions === "delete_dep") {
-                changeRole();
+                deleteDepartment();
             } else if (answers.questions === "delete_role") {
-                changeRole();
+                deleteRole();
             } else if (answers.questions === "quit") {
                 process.exit(0);
             }
@@ -234,28 +234,91 @@ function addDepartment() {
         });
 }
 
-// function deleteEmployee() {
-//     db.query("SELECT * FROM employee", function (err, results) {
-//         console.log("results", results);
-//         const employees = results.map(({ id, first_name, last_name }) => ({
-//             name: `${first_name} ${last_name}`,
-//             value: id,
-//         }));
-//         inquirer
-//             .prompt([
-//                 {
-//                     type: "list",
-//                     name: "id",
-//                     message: "What Employee do you want to Delete?",
-//                     choices: employees,
-//                 },
-//             ])
-//             .then((employee) => {
-//                 console.log("employee", employee);
-//                 db.query("SELECT * FROM role", function (err, results) {
-//                     const roles = results.map(({ id, title }) => ({
-//                         name: title,
-//                         value: id,
-//                     }));
+function deleteEmployee() {
+    db.query("SELECT * FROM employee", function (err, results) {
+        console.log("results", results);
+        const employees = results.map(({ id, first_name, last_name }) => ({
+            name: `${first_name} ${last_name}`,
+            value: id,
+        }));
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "id",
+                    message: "What Employee do you want to Delete?",
+                    choices: employees,
+                },
+            ])
+            .then((employee) => {
+                console.log("employee", employee);
+                db.query("DELETE FROM employee WHERE id = ?", employee.id, function (err, results) {
+                    if (err) throw err;
+                    console.log("Employee has been terminated");
+                });
+                db.query("SELECT * FROM employee", (err, res) => {
+                    init();
+                });
+            });
+    });
+}
+
+function deleteDepartment() {
+    db.query("SELECT * FROM employee", function (err, results) {
+        console.log("results", results);
+        const employees = results.map(({ id, first_name, last_name }) => ({
+            name: `${first_name} ${last_name}`,
+            value: id,
+        }));
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "id",
+                    message: "What Employee do you want to Delete?",
+                    choices: employees,
+                },
+            ])
+            .then((employee) => {
+                console.log("employee", employee);
+                db.query("DELETE FROM employee WHERE id = ?", employee.id, function (err, results) {
+                    if (err) throw err;
+                    console.log("Employee has been terminated");
+                });
+                db.query("SELECT * FROM employee", (err, res) => {
+                    init();
+                });
+            });
+    });
+}
+
+function deleteRole() {
+    db.query("SELECT * FROM employee", function (err, results) {
+        console.log("results", results);
+        const employees = results.map(({ id, first_name, last_name }) => ({
+            name: `${first_name} ${last_name}`,
+            value: id,
+        }));
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "id",
+                    message: "What Employee do you want to Delete?",
+                    choices: employees,
+                },
+            ])
+            .then((employee) => {
+                console.log("employee", employee);
+                db.query("DELETE FROM employee WHERE id = ?", employee.id, function (err, results) {
+                    if (err) throw err;
+                    console.log("Employee has been terminated");
+                });
+                db.query("SELECT * FROM employee", (err, res) => {
+                    init();
+                });
+            });
+    });
+}
 
 init();
