@@ -107,31 +107,54 @@ function addEmployee() {
                     value: id,
                 }));
                 console.log(roles);
+                // const isManager = "yes";
                 inquirer
-                    .prompt({
-                        type: "list",
-                        name: "id",
-                        message: "What is the employee's role?",
-                        choices: roles,
-                    })
+                    .prompt(
+                        {
+                            type: "confirm",
+                            name: "isManager",
+                            message: "Is the Employee a Manager?",
+                            choices: ["yes", "no"],
+                        },
+                        {
+                            type: "list",
+                            name: "id",
+                            message: "What is the employee's role?",
+                            choices: roles,
+                        }
+                    )
                     .then((role) => {
-                        db.query("SELECT * FROM employee where manager_id is null", function (err, results) {
-                            const managers = results.map(({ id, last_name }) => ({
-                                name: last_name,
-                                value: id,
-                            }));
-                            inquirer
-                                .prompt({
-                                    type: "list",
-                                    name: "id",
-                                    message: "What is the manager's name?",
-                                    choices: managers,
-                                })
-                                .then((manager) => {
-                                    db.query("INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?,?,?,?)", [answers.firstName, answers.lastName, role.id, manager.id]);
-                                    init();
-                                });
-                        });
+                        if (answers.isManager === true) {
+                            inquirer.prompt({
+                                type: "list",
+                                name: "id",
+                                message: "What is the employee's role?",
+                                choices: roles,
+                            });
+                            db.query("INSERT INTO employee(first_name, last_name, role_id) values(?,?,?)", [answers.firstName, answers.lastName, role.id], function (err, row) {
+                                if (err) throw err;
+                            });
+                            db.query("SELECT * FROM employee");
+                            init();
+                        } else {
+                            db.query("SELECT * FROM employee where manager_id is null", function (err, results) {
+                                const managers = results.map(({ id, last_name }) => ({
+                                    name: last_name,
+                                    value: id,
+                                }));
+                                inquirer
+                                    .prompt({
+                                        type: "list",
+                                        name: "id",
+                                        message: "What is the manager's name?",
+                                        choices: managers,
+                                    })
+                                    .then((manager) => {
+                                        db.query("INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?,?,?,?)", [answers.firstName, answers.lastName, role.id, manager.id]);
+                                        init();
+                                    });
+                            });
+                        }
                     });
             });
         });
