@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const cTable = require("console.table");
 require("dotenv").config();
 
 const db = mysql.createConnection({
@@ -169,6 +168,7 @@ function addRole() {
                         if (err) throw err;
                     });
                     db.query("SELECT * FROM role", (err, res) => {
+                        console.table(res);
                         init();
                     });
                 });
