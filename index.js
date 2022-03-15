@@ -226,9 +226,9 @@ function addDepartment() {
         .then((answer) => {
             db.query(
                 "INSERT INTO department (name) VALUES (?)",
-                {
+                [
                     name: answer.addDepartment,
-                },
+                ],
                 function (err, row) {
                     if (err) throw err;
                 }
@@ -239,5 +239,29 @@ function addDepartment() {
             });
         });
 }
+
+// function deleteEmployee() {
+//     db.query("SELECT * FROM employee", function (err, results) {
+//         console.log("results", results);
+//         const employees = results.map(({ id, first_name, last_name }) => ({
+//             name: `${first_name} ${last_name}`,
+//             value: id,
+//         }));
+//         inquirer
+//             .prompt([
+//                 {
+//                     type: "list",
+//                     name: "id",
+//                     message: "What Employee do you want to Delete?",
+//                     choices: employees,
+//                 },
+//             ])
+//             .then((employee) => {
+//                 console.log("employee", employee);
+//                 db.query("SELECT * FROM role", function (err, results) {
+//                     const roles = results.map(({ id, title }) => ({
+//                         name: title,
+//                         value: id,
+//                     }));
 
 init();
