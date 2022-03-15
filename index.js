@@ -121,8 +121,8 @@ function addEmployee() {
                     },
                 ];
                 inquirer.prompt(managerInfo).then((role) => {
-                    console.log(managerInfo.manager);
-                    if (managerInfo.manager === "Yes") {
+                    console.log(role);
+                    if (role.manager === true) {
                         inquirer.prompt({
                             type: "list",
                             name: "id",
